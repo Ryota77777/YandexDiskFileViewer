@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Яндекс.Диск Просмотр и Загрузка</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .error {
+            color: #f00;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        label, input {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+            width: 100%;
+        }
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .download-btn {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Просмотр и Загрузка Файлов с Яндекс.Диска</h1>
+        <form method="POST">
+            <label for="public_key">Введите публичную ссылку:</label>
+            <input type="text" id="public_key" name="public_key" placeholder="Публичный ключ" required>
+            <button type="submit">Получить файлы</button>
+        </form>
+    
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    
+        {% if files %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Имя файла</th>
+                        <th>Тип</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                        <tr>
+                            <td>{{ file['name'] }}</td>
+                            <td>{{ file['type'] }}</td> <!-- Отображение типа файла -->
+                            <td>
+                                {% if file['file_url'] %}
+                                    <a href="{{ url_for('views.download', file_url=file['file_url'], file_name=file['name']) }}">
+                                        <i class="fas fa-download"></i> Скачать
+                                    </a>
+                                {% else %}
+                                    <span>Ссылка отсутствует</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% elif public_key %}
+            <p>Нет файлов для отображения. Проверьте правильность введенного ключа.</p>
+        {% endif %}
+    </div>
+    
+    
+
+</body>
+</html>
+
+
+
