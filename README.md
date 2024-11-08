@@ -1,0 +1,2 @@
+# YandexDiskFileViewer
+ A Flask web application that allows users to view and download files from Yandex Disk using a public link. Users can enter a public key to retrieve a list of available files along with their types, then download files directly through generated links. Error handling ensures a user-friendly experience, with notifications for invalid keys and file type display for each listed item.
