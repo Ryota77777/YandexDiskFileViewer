@@ -17,13 +17,13 @@
    git clone https://github.com/yourusername/yourrepository.git
 2. Перейдите в папку проекта:
    ```bash
-cd yourrepository
+   cd yourrepository
 3.Установите зависимости:
    ```bash
-pip install -r requirements.txt
+   pip install -r requirements.txt
 4.Запустите приложение:
    ```bash
-python app.py
+   python app.py
 5.Перейдите в браузер по адресу: http://127.0.0.1:5000/ чтобы увидеть приложение.
 
 Структура проекта
@@ -37,4 +37,4 @@ python app.py
 
 Пример интерфейса:
 ## Скриншот
-![Скриншот](https://github.com/Ryota77777/YandexFileViewer/blob/main/screen11.jpg?raw=true)
+![Скриншот](https://github.com/Ryota77777/YandexDiskFileViewer/blob/main/screen11.jpg?raw=true)
