@@ -40,12 +40,18 @@ def get_files(public_key: str) -> Dict[str, Any]:
 def index():
     files = []
     error = None
+    file_type_filter = request.form.get("file_type")  # Получаем выбранный тип файла
     if request.method == "POST":
         public_key = request.form.get("public_key")
         result = get_files(public_key)
         files = result['files']
         error = result['error']
-    return render_template("index.html", files=files, error=error)
+
+        # Фильтрация файлов по типу
+        if file_type_filter:
+            files = [file for file in files if file_type_filter in file['type']]
+
+    return render_template("index.html", files=files, error=error, file_type_filter=file_type_filter)
 
 @views.route("/download")
 def download():
@@ -72,6 +78,8 @@ def download():
         )
     except requests.RequestException as e:
         return f"Ошибка при скачивании файла: {e}", 500
+
+
 
 
 

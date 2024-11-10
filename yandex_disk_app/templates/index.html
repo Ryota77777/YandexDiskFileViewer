@@ -1,143 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Яндекс.Диск Просмотр и Загрузка</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Просмотр и загрузка файлов с Яндекс.Диска</title>
     <style>
+        /* Стили для страницы */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            color: #333;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex; /* Используем flex для центрирования */
+            flex-direction: column; /* Размещаем элементы по вертикали */
+            align-items: center; /* Центрируем по горизонтали */
+            justify-content: flex-start; /* Ставим элементы сверху */
+            height: 100vh; /* Задаем высоту на весь экран */
         }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+
         .container {
-            width: 90%;
-            max-width: 600px;
-            background: #fff;
+            width: 80%;
+            max-width: 800px;
             padding: 20px;
+            background-color: white;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px; /* Отступ сверху для формы */
         }
-        .error {
-            color: #f00;
-            font-weight: bold;
+
+        h1 {
             text-align: center;
-            margin-top: 10px;
+            color: #333;
         }
-        form {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-        label, input {
-            margin-bottom: 10px;
+
+        label {
             font-size: 16px;
+            margin-bottom: 5px;
+            display: block;
         }
-        input[type="text"] {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            font-size: 16px;
+
+        input[type="text"], select {
             width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease-in-out;
         }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
         button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin-top: 20px;
         }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
         th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
         }
+
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
         }
-        .download-btn {
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .download-btn:hover {
-            background-color: #0056b3;
+
+        .select-wrapper {
+            position: relative;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
 
+<div class="container">
+    <h1>Просмотр и Загрузка Файлов с Яндекс.Диска</h1>
+
+    <!-- Форма для ввода публичного ключа и выбора типа файлов -->
+    <form method="POST">
+        <label for="public_key">Введите публичную ссылку:</label>
+        <input type="text" id="public_key" name="public_key" placeholder="Публичный ключ" required>
+
+        <div class="select-wrapper">
+            <label for="file_type">Выберите тип файлов:</label>
+            <select id="file_type" name="file_type">
+                <option value="">Все файлы</option>
+                <option value="image" {% if file_type_filter == 'image' %}selected{% endif %}>Изображения</option>
+                <option value="application" {% if file_type_filter == 'application' %}selected{% endif %}>Документы</option>
+            </select>
+        </div>
+
+        <button type="submit">Получить файлы</button>
+    </form>
+
+    <!-- Сообщение об ошибке -->
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+</div>
+
+<!-- Таблица с результатами -->
+{% if files %}
     <div class="container">
-        <h1>Просмотр и Загрузка Файлов с Яндекс.Диска</h1>
-        <form method="POST">
-            <label for="public_key">Введите публичную ссылку:</label>
-            <input type="text" id="public_key" name="public_key" placeholder="Публичный ключ" required>
-            <button type="submit">Получить файлы</button>
-        </form>
-    
-        {% if error %}
-            <div class="error">{{ error }}</div>
-        {% endif %}
-    
-        {% if files %}
-            <table>
-                <thead>
+        <table>
+            <thead>
+                <tr>
+                    <th>Имя файла</th>
+                    <th>Тип</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
                     <tr>
-                        <th>Имя файла</th>
-                        <th>Тип</th>
-                        <th>Действие</th>
+                        <td>{{ file['name'] }}</td>
+                        <td>{{ file['type'] }}</td>
+                        <td>
+                            {% if file['file_url'] %}
+                                <a href="{{ url_for('views.download', file_url=file['file_url'], file_name=file['name']) }}">
+                                    <i class="fas fa-download"></i> Скачать
+                                </a>
+                            {% else %}
+                                <span>Ссылка отсутствует</span>
+                            {% endif %}
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for file in files %}
-                        <tr>
-                            <td>{{ file['name'] }}</td>
-                            <td>{{ file['type'] }}</td> <!-- Отображение типа файла -->
-                            <td>
-                                {% if file['file_url'] %}
-                                    <a href="{{ url_for('views.download', file_url=file['file_url'], file_name=file['name']) }}">
-                                        <i class="fas fa-download"></i> Скачать
-                                    </a>
-                                {% else %}
-                                    <span>Ссылка отсутствует</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% elif public_key %}
-            <p>Нет файлов для отображения. Проверьте правильность введенного ключа.</p>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    
-    
+{% elif public_key %}
+    <p>Нет файлов для отображения. Проверьте правильность введенного ключа.</p>
+{% endif %}
 
 </body>
 </html>
+
+
+
 
 
 
