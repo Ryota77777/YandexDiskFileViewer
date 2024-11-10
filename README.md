@@ -37,4 +37,5 @@
 
 Пример интерфейса:
 ## Скриншот
+
 ![Скриншот](https://github.com/Ryota77777/YandexDiskFileViewer/blob/main/screen11.jpg?raw=true)
