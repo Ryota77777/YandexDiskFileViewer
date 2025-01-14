@@ -21,15 +21,19 @@
 1. Клонируйте репозиторий:
    ```bash
    git clone https://github.com/yourusername/yourrepository.git
+   ```
 2. Перейдите в папку проекта:
    ```bash
    cd yourrepository
+   ```
 3.Установите зависимости:
    ```bash
    pip install -r requirements.txt
+   ```
 4.Запустите приложение:
    ```bash
    python app.py
+   ```
 5.Перейдите в браузер по адресу: http://127.0.0.1:5000/ чтобы увидеть приложение.
 
 Структура проекта
